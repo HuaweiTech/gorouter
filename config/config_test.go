@@ -149,7 +149,7 @@ start_response_delay_interval: 15
 
 				Ω(config.DropletStaleThreshold).To(Equal(15 * time.Second))
 				Ω(config.StartResponseDelayInterval).To(Equal(15 * time.Second))
-		})
+			})
 		})
 
 		Describe("Timeout", func() {
