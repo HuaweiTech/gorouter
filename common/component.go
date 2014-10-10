@@ -166,14 +166,7 @@ func (c *VcapComponent) ListenAndServe() {
 	})
 
 	for path, marshaler := range c.InfoRoutes {
-		hs.HandleFunc(path, func(w http.ResponseWriter, req *http.Request) {
-			w.Header().Set("Connection", "close")
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
-
-			enc := json.NewEncoder(w)
-			enc.Encode(marshaler)
-		})
+		setInfoRouteHandleFunc(hs, path, marshaler)
 	}
 
 	f := func(user, password string) bool {
@@ -205,4 +198,15 @@ func (c *VcapComponent) ListenAndServe() {
 			c.statusCh <- err
 		}
 	}()
+}
+
+func setInfoRouteHandleFunc(hs *http.ServeMux, path string, marshaler json.Marshaler) {
+	hs.HandleFunc(path, func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Connection", "close")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		enc := json.NewEncoder(w)
+		enc.Encode(marshaler)
+	})
 }
